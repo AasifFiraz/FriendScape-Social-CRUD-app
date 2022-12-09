@@ -1,7 +1,8 @@
 const User = require("../../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-
+const { GraphQLError } = require("graphql");
+const { validateRegisterInput } = require("../../utils/validators");
 module.exports = {
   Mutation: {
     async register(_, args) {
@@ -9,15 +10,23 @@ module.exports = {
         const { username, email, password, confirmPassword } =
           args.registerInput;
 
-          const existingUser = await User.findOne({ email: email });
+        const existingUser = await User.findOne({ email: email });
 
         if (existingUser) {
           throw new Error("Email already exists, Please login");
         }
-        if (password !== confirmPassword) {
-            throw new Error("Password does not match");
-  
+
+        const { isValid, errors } = validateRegisterInput(
+          username,
+          email,
+          password,
+          confirmPassword
+        );
+
+        if (!isValid) {
+          throw new GraphQLError(JSON.stringify(errors));
         }
+
         const hashedPass = await bcrypt.hash(password, 15);
 
         const user = new User({
@@ -34,7 +43,8 @@ module.exports = {
             email: addedUser.email,
             username: addedUser.username,
           },
-          process.env.SECRET_KEY, {expiresIn: '3h'}
+          process.env.SECRET_KEY,
+          { expiresIn: "3h" }
         );
         return { ...addedUser._doc, token, id: addedUser._id };
       } catch (error) {
