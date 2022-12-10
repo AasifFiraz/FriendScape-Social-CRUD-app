@@ -7,6 +7,25 @@ const typeDefs = gql`
     body: String!
     username: String!
     createdAt: Date
+    comments: [Comment]!
+    likes: [Like]!
+    likesCount: Int!
+    commentsCount: Int!
+  }
+
+  type Comment {
+    id: ID!
+    username: String!
+    body: String!
+    user: ID!
+    createdAt: Date!
+  }
+
+  type Like {
+    id: ID!
+    createdAt: Date
+    username: String!
+    user: ID!
   }
 
   type Query {
@@ -39,6 +58,9 @@ const typeDefs = gql`
     login(loginInput: LoginInput!): User!
     createPost(body: String!): Post!
     deletePost(postId: ID!): String!
+    createComment(postId: String!, body: String!): Post!
+    deleteComment(postId: String!, commentID: ID!): Post!
+    likePost(PostId: ID!): Post!
   }
 `;
 

@@ -39,7 +39,7 @@ module.exports = {
         if (!post) {
           throw new Error(`Cannot delete post with id: ${postId}`);
         }
-        console.log(user.id, post.user.toString());
+
         if (user.id !== post.user.toString()) {
           throw new AuthenticationError(
             "You are not authorized to delete this post"
@@ -47,6 +47,79 @@ module.exports = {
         }
         await Post.findByIdAndDelete(postId);
         return "Post has been successfully deleted";
+      } catch (error) {
+        throw new Error(error);
+      }
+    },
+    async createComment(_, { postId, body }, context) {
+      try {
+        const { username, id } = await checkAuth(context);
+        if (body.trim() === "") {
+          throw new Error("Comment body cannot be empty");
+        }
+        const post = await Post.findById(postId);
+        if (post) {
+          post.comments.unshift({
+            body,
+            username,
+            user: id,
+            createdAt: new Date(),
+          });
+          await post.save();
+          return post;
+        } else {
+          throw new Error("Post not found");
+        }
+      } catch (error) {
+        throw new Error(error);
+      }
+    },
+    async deleteComment(_, { postId, commentID }, context) {
+      try {
+        const { id } = await checkAuth(context);
+        const post = await Post.findById(postId);
+
+        if (!post) {
+          throw new Error("Post not found");
+        }
+
+        const commentIndex = post.comments.findIndex((c) => c.id === commentID);
+        if (post.comments[commentIndex].user.toString() === id) {
+          post.comments.splice(commentIndex, 1);
+          await post.save();
+          return post;
+        } else {
+          throw new Error("You are not authorized to delete this comment");
+        }
+      } catch (error) {
+        throw new Error(error);
+      }
+    },
+    async likePost(_, { PostId }, context) {
+      try {
+        const { username, id } = await checkAuth(context);
+
+        const post = await Post.findById(PostId);
+
+        if (!post) {
+          throw new Error("Post not found");
+        }
+
+        const isLiked = post.likes.find((like) => like.user.toString() === id);
+
+        if (isLiked) {
+          post.likes = post.likes.filter(
+            (like) => like.user.toString() !== id
+          );
+        } else {
+          post.likes.unshift({
+            username,
+            user: id,
+            createdAt: new Date(),
+          });
+        }
+        await post.save();
+        return post
       } catch (error) {
         throw new Error(error);
       }
