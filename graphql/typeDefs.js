@@ -13,7 +13,7 @@ const typeDefs = gql`
     getPosts: [Post]
     getPost(PostId: ID!): Post
   }
-  
+
   type User {
     id: ID!
     email: String!
@@ -37,8 +37,9 @@ const typeDefs = gql`
   type Mutation {
     register(registerInput: RegisterInput!): User!
     login(loginInput: LoginInput!): User!
-    verifyToken(token: String!): User!
+    createPost(body: String!): Post!
+    deletePost(postId: ID!): String!
   }
 `;
 
-module.exports = typeDefs
+module.exports = typeDefs;

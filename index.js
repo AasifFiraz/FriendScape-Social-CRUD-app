@@ -1,12 +1,13 @@
 const { ApolloServer } = require("apollo-server");
 const connectDB = require("./db/connect");
 require("dotenv").config();
-const typeDefs = require("./graphql/typeDefs")
-const resolvers = require("./graphql/resolvers")
+const typeDefs = require("./graphql/typeDefs");
+const resolvers = require("./graphql/resolvers");
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  context: ({ req }) => ({ req }),
 });
 
 const start = async () => {
