@@ -29,8 +29,15 @@ const typeDefs = gql`
     confirmPassword: String!
   }
 
+  input LoginInput {
+    email: String!
+    password: String!
+  }
+
   type Mutation {
     register(registerInput: RegisterInput!): User!
+    login(loginInput: LoginInput!): User!
+    verifyToken(token: String!): User!
   }
 `;
 

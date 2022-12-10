@@ -31,10 +31,10 @@ module.exports.validateRegisterInput = (
   };
 };
 
-module.exports.validateLoginInput = (username, password) => {
+module.exports.validateLoginInput = (email, password) => {
   const errors = {};
-  if (username.trim() === "") {
-    errors.username = "Hmmm... you forgot a username.";
+  if (email.trim() === "") {
+    errors.email = "Hmmm... you forgot a email.";
   }
   if (password.trim() === "") {
     errors.password = "You forgot your password.";
@@ -42,6 +42,6 @@ module.exports.validateLoginInput = (username, password) => {
 
   return {
     errors,
-    valid: Object.keys(errors).length < 1,
+    isValid: Object.keys(errors).length < 1,
   };
 };
