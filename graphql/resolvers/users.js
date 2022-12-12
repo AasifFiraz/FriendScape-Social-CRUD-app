@@ -20,7 +20,6 @@ const generateToken = (user) => {
 };
 
 module.exports = {
-  Query: {},
   Mutation: {
     async register(_, args) {
       try {

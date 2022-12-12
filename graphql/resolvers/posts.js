@@ -108,9 +108,7 @@ module.exports = {
         const isLiked = post.likes.find((like) => like.user.toString() === id);
 
         if (isLiked) {
-          post.likes = post.likes.filter(
-            (like) => like.user.toString() !== id
-          );
+          post.likes = post.likes.filter((like) => like.user.toString() !== id);
         } else {
           post.likes.unshift({
             username,
@@ -119,7 +117,7 @@ module.exports = {
           });
         }
         await post.save();
-        return post
+        return post;
       } catch (error) {
         throw new Error(error);
       }
