@@ -3,10 +3,12 @@ import { Form } from "semantic-ui-react";
 import { REGISTER } from "../graphql/Mutation";
 import { useHistory } from "react-router-dom";
 import { useForm } from "../utils/hooks";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { AuthContext } from "../context/auth";
 
 const RegisterPage = () => {
   const history = useHistory();
+  const context = useContext(AuthContext);
   const [errors, setErrors] = useState({});
   const { onChange, handleSubmit, values } = useForm(addUser, {
     username: "",
@@ -18,7 +20,7 @@ const RegisterPage = () => {
   const [registerUser, { loading }] = useMutation(REGISTER, {
     variables: values,
     update(_, result) {
-      console.log(result)
+      context.login(result.data.login);
       history.push("/");
       Object.keys(values).forEach((i) => (values[i] = ""));
     },
@@ -40,6 +42,7 @@ const RegisterPage = () => {
   ) : (
     <div className="form-container">
       <Form onSubmit={handleSubmit} noValidate>
+        <h1>Register</h1>
         <Form.Input
           fluid
           label="Username"

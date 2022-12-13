@@ -3,10 +3,12 @@ import { Form } from "semantic-ui-react";
 import { LOGIN } from "../graphql/Mutation";
 import { useHistory } from "react-router-dom";
 import { useForm } from "../utils/hooks";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { AuthContext } from "../context/auth";
 
 const LoginPage = () => {
   const history = useHistory();
+  const context = useContext(AuthContext);
   const [errors, setErrors] = useState({});
   const { onChange, handleSubmit, values } = useForm(addUser, {
     email: "",
@@ -16,7 +18,7 @@ const LoginPage = () => {
   const [loginUser, { loading }] = useMutation(LOGIN, {
     variables: values,
     update(_, result) {
-      console.log(result);
+      context.login(result.data.login);
       history.push("/");
       Object.keys(values).forEach((i) => (values[i] = ""));
     },
@@ -38,6 +40,7 @@ const LoginPage = () => {
   ) : (
     <div className="form-container">
       <Form onSubmit={handleSubmit} noValidate style={{ marginTop: "50px" }}>
+        <h1>Login</h1>
         <Form.Input
           fluid
           label="Email"
