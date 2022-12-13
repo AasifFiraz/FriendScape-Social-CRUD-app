@@ -8,34 +8,30 @@ import HomePage from "./pages/Home";
 import RegisterPage from "./pages/Register";
 import Navbar from "./components/Navbar";
 import SinglePost from "./components/SinglePost";
-
+import { AuthProvider } from "./context/auth";
+import AuthRoute from "./utils/AuthRoute";
 
 function App() {
   return (
     <Container>
-      <Router>
-        <Navbar />
-        <Switch>
-          <Route exact path="/">
-            <HomePage />
-          </Route>
-          <Route exact path="/login">
-            <LoginPage />
-          </Route>
-          <Route exact path="/register">
-            <RegisterPage />
-          </Route>
-          <Route exact path="/register">
-            <RegisterPage />
-          </Route>
-          <Route exact path="/posts/:id">
-            <SinglePost />
-          </Route>
-          <Route path="*">
-            <ErrorPage />
-          </Route>
-        </Switch>
-      </Router>
+      <AuthProvider>
+        <Router>
+          <Navbar />
+          <Switch>
+            <Route exact path="/" component={HomePage} />
+            <AuthRoute exact path="/login">
+              <LoginPage />
+            </AuthRoute>
+            <AuthRoute exact path="/register">
+              <RegisterPage />
+            </AuthRoute>
+            <AuthRoute exact path="/posts/:id">
+              <SinglePost />
+            </AuthRoute>
+            <Route path="*" component={ErrorPage} />
+          </Switch>
+        </Router>
+      </AuthProvider>
     </Container>
   );
 }
