@@ -10,8 +10,8 @@ const HomePage = () => {
 
   return (
     <Grid columns={3} divided>
-      <Grid.Row>
-        <h1>Recent Posts</h1>
+      <Grid.Row centered>
+        <h1 style={{marginTop: '10px'}}>Recent Posts</h1>
       </Grid.Row>
       <Grid.Row>
         {loading ? (

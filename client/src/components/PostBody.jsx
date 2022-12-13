@@ -1,13 +1,25 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useMutation } from "@apollo/client";
 import { Button, Card, Image, Icon, Label } from "semantic-ui-react";
 import UserImage from "../assets/user.png";
 import moment from "moment";
+import { LIKE_POST } from "../graphql/Mutation"
 
 const PostBody = ({
   post: { body, id, username, createdAt, likesCount, commentsCount },
 }) => {
-  console.log(likesCount, commentsCount);
+  const [addLike, {data, loading, error}] = useMutation(LIKE_POST);
+
+  const likePost = () => {
+    addLike({ variables: { PostId: id } })
+    console.log(data, loading, error)
+  }
+
+  const commentOnPost = () => {
+    console.log("Comment Post")
+  }
+
   return (
     <Card.Group>
       <Card fluid>
@@ -20,7 +32,7 @@ const PostBody = ({
           <Card.Description>{body}</Card.Description>
         </Card.Content>
         <Card.Content>
-          <Button as="div" labelPosition="right">
+          <Button as="div" labelPosition="right" onClick={likePost}>
             <Button basic color="red">
               <Icon name="heart" />
             </Button>
@@ -28,7 +40,7 @@ const PostBody = ({
               {likesCount}
             </Label>
           </Button>
-          <Button as="div" labelPosition="right">
+          <Button as="div" labelPosition="right" onClick={commentOnPost}>
             <Button basic color="blue">
               <Icon name="comment" />
             </Button>

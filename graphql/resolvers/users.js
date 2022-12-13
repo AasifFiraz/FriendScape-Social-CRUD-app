@@ -72,7 +72,7 @@ module.exports = {
         if (!user)
           throw new GraphQLError(`User with email : ${email} does not exist`);
 
-        const isPasswordValid = await bcrypt.compareSync(
+        const isPasswordValid = bcrypt.compareSync(
           password,
           user.password
         );
