@@ -25,9 +25,9 @@ function App() {
             <AuthRoute exact path="/register">
               <RegisterPage />
             </AuthRoute>
-            <AuthRoute exact path="/posts/:id">
+            <Route exact path="/posts/:id">
               <SinglePost />
-            </AuthRoute>
+            </Route>
             <Route path="*" component={ErrorPage} />
           </Switch>
         </Router>

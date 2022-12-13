@@ -10,12 +10,12 @@ const httpLink = createHttpLink({
 });
 
 const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem('token');
+  const currentUser = JSON.parse(localStorage.getItem("CURRENT_USER"))
   
   return {
     headers: {
       ...headers,
-      authorization: token ? `Bearer ${token}` : ""
+      authorization: currentUser ? `Bearer ${currentUser.token}` : ""
     }
   }
 })

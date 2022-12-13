@@ -7,6 +7,7 @@ const typeDefs = gql`
     body: String!
     username: String!
     createdAt: Date
+    user: ID!
     comments: [Comment]!
     likes: [Like]!
     likesCount: Int!

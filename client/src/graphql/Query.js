@@ -9,6 +9,7 @@ export const GET_POSTS = gql`
       createdAt
       likesCount
       commentsCount
+      user
       comments {
         id
         user
