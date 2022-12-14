@@ -20,7 +20,7 @@ const RegisterPage = () => {
   const [registerUser, { loading }] = useMutation(REGISTER, {
     variables: values,
     update(_, result) {
-      context.login(result.data.login);
+      context.login(result.data.register);
       history.push("/");
       Object.keys(values).forEach((i) => (values[i] = ""));
     },
