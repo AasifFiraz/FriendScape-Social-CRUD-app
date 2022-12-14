@@ -10,7 +10,7 @@ const server = new ApolloServer({
   context: ({ req }) => ({ req }),
 });
 
-const PORT = process.env.port || 4000
+const PORT = process.env.PORT || 4000
 
 const start = async () => {
   try {
