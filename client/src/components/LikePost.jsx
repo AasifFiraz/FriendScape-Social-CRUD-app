@@ -1,10 +1,11 @@
 import React, { useEffect, useContext, useState } from "react";
-import { Button, Modal, Icon, Label } from "semantic-ui-react";
+import { Button, Icon, Label } from "semantic-ui-react";
 import { AuthContext } from "../context/auth";
 import { useHistory } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import { LIKE_POST } from "../graphql/Mutation";
 import { GET_POSTS } from "../graphql/Query";
+import ConfirmModal from "./ConfirmModal";
 
 const LikePost = ({ id, likesCount, likes }) => {
   const [isLiked, setIsLiked] = useState(false);
@@ -34,33 +35,19 @@ const LikePost = ({ id, likesCount, likes }) => {
     } else {
       setIsLiked(false);
     }
-  }, [user]);
+  }, [likes, user]);
 
   return modalOpen ? (
-    <Modal
-      size="tiny"
-      dimmer="blurring"
-      open={modalOpen}
-      onOpen={() => setModalOpen(true)}
-      onClose={() => setModalOpen(false)}
-    >
-      <Modal.Header>Not Logged In</Modal.Header>
-      <Modal.Content>You have to be logged in to like the post</Modal.Content>
-      <Modal.Actions>
-        <Button negative onClick={() => setModalOpen(false)}>
-          Cancel
-        </Button>
-        <Button
-          positive
-          onClick={() => {
-            history.push("/login");
-            setModalOpen(false);
-          }}
-        >
-          Login
-        </Button>
-      </Modal.Actions>
-    </Modal>
+    <ConfirmModal
+      heading="Not Logged In"
+      modalOpen={modalOpen}
+      setModalOpen={setModalOpen}
+      body="You have to be logged in to like the post"
+      confirmName="Login"
+      onConfirm={() => {
+        history.push("/login");
+      }}
+    />
   ) : (
     <Button as="div" labelPosition="right" onClick={likePost}>
       <Button basic={isLiked ? false : true} loading={loading} color="red">
