@@ -10,6 +10,12 @@ export const GET_POSTS = gql`
       likesCount
       commentsCount
       user
+      likes {
+        id
+        user
+        username
+        createdAt
+      }
       comments {
         id
         user
@@ -30,6 +36,19 @@ export const GET_POST = gql`
       likesCount
       commentsCount
       createdAt
+      comments {
+        id
+        username
+        user
+        body
+        createdAt
+      }
+      likes {
+        id
+        user
+        username
+        createdAt
+      }
     }
   }
 `;
