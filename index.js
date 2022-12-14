@@ -10,10 +10,12 @@ const server = new ApolloServer({
   context: ({ req }) => ({ req }),
 });
 
+const PORT = process.env.port || 5000
+
 const start = async () => {
   try {
     await connectDB(process.env.MONGO_URI);
-    const { url } = await server.listen({ port: 4000 });
+    const { url } = await server.listen({ port: PORT });
     console.log(`Server is running at: ${url}`);
   } catch (error) {
     console.log(error);
