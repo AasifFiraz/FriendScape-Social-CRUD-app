@@ -1,7 +1,7 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { GET_POST } from "../graphql/Query";
-import { CREATE_COMMENT } from "../graphql/Mutation";
+import { CREATE_COMMENT, DELETE_COMMENT } from "../graphql/Mutation";
 import {
   Grid,
   Image,
@@ -9,6 +9,7 @@ import {
   Card,
   Button,
   Icon,
+  TextArea,
   Label,
   Comment,
   Header,
@@ -28,6 +29,7 @@ const SinglePost = () => {
   const { user } = useContext(AuthContext);
   const history = useHistory();
   const { id } = useParams();
+  const commentField = useRef(null);
 
   const { handleSubmit, onChange, values } = useForm(addComment, {
     body: "",
@@ -45,12 +47,20 @@ const SinglePost = () => {
     refetchQueries: [{ query: GET_POST, variables: { postId: id } }, "getPost"],
   });
 
+  const [deleteComment, deleteCommentInfo] = useMutation(DELETE_COMMENT, {
+    refetchQueries: [{ query: GET_POST, variables: { postId: id } }, "getPost"],
+  });
+
   function addComment() {
     createComment();
   }
 
   const deletePostCallback = () => {
     history.push("/");
+  };
+
+  const handleClick = () => {
+    commentField.current.focus();
   };
 
   const generatePostBody = () => {
@@ -81,17 +91,21 @@ const SinglePost = () => {
               </Segment>
               {user && (
                 <Form onSubmit={handleSubmit}>
-                  <Form.TextArea
+                  <TextArea
                     name="body"
+                    type="text"
+                    ref={commentField}
                     value={values.body}
                     onChange={onChange}
                     placeholder="Look Mom, I can comment :)"
                   />
                   <Form.Button
+                    style={{ marginTop: "20px" }}
                     loading={createComentInfo.loading}
                     type="submit"
                     content="Enter Comment"
                     labelPosition="left"
+                    disabled={values.body.trim() === ""}
                     icon="comment"
                     primary
                   />
@@ -107,11 +121,7 @@ const SinglePost = () => {
                 </Card.Content>
                 <Card.Content extra>
                   <LikePost id={id} likes={likes} likesCount={likesCount} />
-                  <Button
-                    as="div"
-                    labelPosition="right"
-                    // onClick={() => history.push(`/posts/${id}`)}
-                  >
+                  <Button as="div" labelPosition="right" onClick={handleClick}>
                     <Button basic color="blue">
                       <Icon name="comment" />
                     </Button>
@@ -125,38 +135,47 @@ const SinglePost = () => {
                 </Card.Content>
               </Card>
               {comments.length > 0 && (
-                <div>
-                  <Grid.Column style={{ marginTop: "30px" }}>
-                    <Comment.Group>
-                      <Header as="h3" dividing>
-                        Comments
-                      </Header>
-                      {comments.map((comment) => (
-                        <Comment>
-                          <Comment.Avatar src="https://react.semantic-ui.com/images/avatar/small/matt.jpg" />
-                          <Comment.Content>
-                            <Comment.Author as="a">
-                              {comment.username}
-                            </Comment.Author>
-                            <Comment.Metadata>
-                              {moment(comment.createdAt).fromNow()}
-                            </Comment.Metadata>
-                            <Comment.Text>{comment.body}</Comment.Text>
-                            <Comment.Actions>
-                              <Comment.Action>Reply</Comment.Action>
+                <Grid.Column style={{ marginTop: "30px" }}>
+                  <Comment.Group>
+                    <Header as="h3" dividing>
+                      Comments
+                    </Header>
+                    {comments.map((comment) => (
+                      <Comment>
+                        <Comment.Avatar src="https://react.semantic-ui.com/images/avatar/small/matt.jpg" />
+                        <Comment.Content>
+                          <Comment.Author as="a">
+                            {comment.username}
+                          </Comment.Author>
+                          <Comment.Metadata>
+                            {moment(comment.createdAt).fromNow()}
+                          </Comment.Metadata>
+                          <Comment.Text>{comment.body}</Comment.Text>
+                          <Comment.Actions>
+                            <Comment.Action>Reply</Comment.Action>
+                            {user && user.id === comment.user && (
                               <Icon
+                                key={comment.id}
                                 color="red"
                                 name="trash"
+                                loading={deleteCommentInfo.loading}
                                 style={{ cursor: "pointer" }}
-                                onClick={() => console.log("Deleted", comment.id)}
+                                onClick={() =>
+                                  deleteComment({
+                                    variables: {
+                                      postId: id,
+                                      commentId: comment.id,
+                                    },
+                                  })
+                                }
                               />
-                            </Comment.Actions>
-                          </Comment.Content>
-                        </Comment>
-                      ))}
-                    </Comment.Group>
-                  </Grid.Column>
-                </div>
+                            )}
+                          </Comment.Actions>
+                        </Comment.Content>
+                      </Comment>
+                    ))}
+                  </Comment.Group>
+                </Grid.Column>
               )}
             </Grid.Column>
           </Grid.Row>
