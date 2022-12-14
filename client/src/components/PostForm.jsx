@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/client";
 import { useContext, useState } from "react";
-import { Form, Transition } from "semantic-ui-react";
+import { Form } from "semantic-ui-react";
 import { AuthContext } from "../context/auth";
 import { useForm } from "../utils/hooks";
 import { CREATE_POST } from "../graphql/Mutation";
@@ -10,11 +10,12 @@ const PostForm = () => {
   const { user } = useContext(AuthContext);
   const [errors, setErrors] = useState();
   const { handleSubmit, onChange, values } = useForm(addPost, {
-    body: "",
+    postBody: "",
   });
 
   const [createPost, { loading }] = useMutation(CREATE_POST, {
     update(_, result) {
+      values.postBody = ""
       console.log(result);
     },
     refetchQueries: [{ query: GET_POSTS }, "getPosts"],
