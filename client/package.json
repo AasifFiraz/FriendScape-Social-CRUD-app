@@ -42,5 +42,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": " https://friendscape-api.herokuapp.com/"
+  "proxy": "https://friendscape-api.herokuapp.com/"
 }
