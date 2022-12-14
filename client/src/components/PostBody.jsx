@@ -6,6 +6,7 @@ import { useHistory } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../context/auth";
 import LikePost from "./LikePost";
+import DeleteButton from "./DeleteButon";
 
 const PostBody = ({
   post: {
@@ -33,7 +34,7 @@ const PostBody = ({
           </Card.Meta>
           <Card.Description>{body}</Card.Description>
         </Card.Content>
-        <Card.Content textAlign="center">
+        <Card.Content >
           <LikePost likesCount={likesCount} likes={likes} id={id} />
           <Button
             as="div"
@@ -48,9 +49,7 @@ const PostBody = ({
             </Label>
           </Button>
           {context.user && context.user.id === userId && (
-            <Button style={{ marginLeft: "20px" }} color="red">
-              <Icon name="trash" />
-            </Button>
+            <DeleteButton id={id} />
           )}
         </Card.Content>
       </Card>

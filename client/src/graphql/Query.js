@@ -36,6 +36,7 @@ export const GET_POST = gql`
       likesCount
       commentsCount
       createdAt
+      user
       comments {
         id
         username
