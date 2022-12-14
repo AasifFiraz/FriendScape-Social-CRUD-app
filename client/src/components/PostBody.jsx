@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Button, Card, Image, Icon, Label } from "semantic-ui-react";
+import { Button, Card, Image, Icon, Label, Popup } from "semantic-ui-react";
 import UserImage from "../assets/user.png";
 import moment from "moment";
 import { useHistory } from "react-router-dom";
@@ -34,20 +34,25 @@ const PostBody = ({
           </Card.Meta>
           <Card.Description>{body}</Card.Description>
         </Card.Content>
-        <Card.Content >
+        <Card.Content>
           <LikePost likesCount={likesCount} likes={likes} id={id} />
-          <Button
-            as="div"
-            labelPosition="right"
-            onClick={() => history.push(`/posts/${id}`)}
-          >
-            <Button basic color="blue">
-              <Icon name="comment" />
-            </Button>
-            <Label as="a" basic color="blue" pointing="left">
-              {commentsCount}
-            </Label>
-          </Button>
+          <Popup
+            content="Comment of post"
+            trigger={
+              <Button
+                as="div"
+                labelPosition="right"
+                onClick={() => history.push(`/posts/${id}`)}
+              >
+                <Button basic color="blue">
+                  <Icon name="comment" />
+                </Button>
+                <Label as="a" basic color="blue" pointing="left">
+                  {commentsCount}
+                </Label>
+              </Button>
+            }
+          />
           {context.user && context.user.id === userId && (
             <DeleteButton id={id} />
           )}

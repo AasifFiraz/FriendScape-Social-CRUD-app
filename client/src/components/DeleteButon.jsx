@@ -4,13 +4,14 @@ import { useMutation } from "@apollo/client";
 import { GET_POSTS } from "../graphql/Query";
 import { DELETE_POST } from "../graphql/Mutation";
 import ConfirmModal from "./ConfirmModal";
+import { Popup } from "semantic-ui-react";
 
 const DeleteButton = ({ id, callback }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [deletePost, { loading }] = useMutation(DELETE_POST, {
     variables: { postId: id },
     update() {
-      if(callback) {
+      if (callback) {
         callback();
       }
     },
@@ -18,7 +19,7 @@ const DeleteButton = ({ id, callback }) => {
   });
 
   const handleDelete = () => {
-    setModalOpen(true)
+    setModalOpen(true);
   };
 
   return modalOpen ? (
@@ -29,18 +30,23 @@ const DeleteButton = ({ id, callback }) => {
       body="Are you sure you want to delete this post"
       confirmName="Delete"
       onConfirm={() => {
-        deletePost()
+        deletePost();
       }}
     />
-  ): (
-    <Button
-      loading={loading}
-      style={{ float: "right", width: '50px' }}
-      color="red"
-      onClick={handleDelete}
-    >
-      <Icon name="trash" />
-    </Button>
+  ) : (
+    <Popup
+      content="Delete Post"
+      trigger={
+        <Button
+          loading={loading}
+          style={{ float: "right", width: "50px" }}
+          color="red"
+          onClick={handleDelete}
+        >
+          <Icon name="trash" />
+        </Button>
+      }
+    />
   );
 };
 

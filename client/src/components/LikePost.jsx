@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from "react";
-import { Button, Icon, Label } from "semantic-ui-react";
+import { Button, Icon, Label, Popup } from "semantic-ui-react";
 import { AuthContext } from "../context/auth";
 import { useHistory } from "react-router-dom";
 import { useMutation } from "@apollo/client";
@@ -49,14 +49,19 @@ const LikePost = ({ id, likesCount, likes }) => {
       }}
     />
   ) : (
-    <Button as="div" labelPosition="right" onClick={likePost}>
-      <Button basic={isLiked ? false : true} loading={loading} color="red">
-        <Icon name="heart" />
-      </Button>
-      <Label as="a" basic color="red" pointing="left">
-        {likesCount}
-      </Label>
-    </Button>
+    <Popup
+      content={isLiked ? "Unlike Post" : "Like Post"}
+      trigger={
+        <Button as="div" labelPosition="right" onClick={likePost}>
+          <Button basic={isLiked ? false : true} loading={loading} color="red">
+            <Icon name="heart" />
+          </Button>
+          <Label as="a" basic color="red" pointing="left">
+            {likesCount}
+          </Label>
+        </Button>
+      }
+    />
   );
 };
 

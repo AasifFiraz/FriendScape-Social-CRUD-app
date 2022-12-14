@@ -14,6 +14,7 @@ import {
   Comment,
   Header,
   Form,
+  Popup,
 } from "semantic-ui-react";
 import { useQuery } from "@apollo/client";
 import { AuthContext } from "../context/auth";
@@ -121,14 +122,23 @@ const SinglePost = () => {
                 </Card.Content>
                 <Card.Content extra>
                   <LikePost id={id} likes={likes} likesCount={likesCount} />
-                  <Button as="div" labelPosition="right" onClick={handleClick}>
-                    <Button basic color="blue">
-                      <Icon name="comment" />
-                    </Button>
-                    <Label as="a" basic color="blue" pointing="left">
-                      {commentsCount}
-                    </Label>
-                  </Button>
+                  <Popup
+                    content="Comment on post"
+                    trigger={
+                      <Button
+                        as="div"
+                        labelPosition="right"
+                        onClick={handleClick}
+                      >
+                        <Button basic color="blue">
+                          <Icon name="comment" />
+                        </Button>
+                        <Label as="a" basic color="blue" pointing="left">
+                          {commentsCount}
+                        </Label>
+                      </Button>
+                    }
+                  />
                   {user && user.id === userId && (
                     <DeleteButton id={id} callback={deletePostCallback} />
                   )}
@@ -154,19 +164,25 @@ const SinglePost = () => {
                           <Comment.Actions>
                             <Comment.Action>Reply</Comment.Action>
                             {user && user.id === comment.user && (
-                              <Icon
-                                key={comment.id}
-                                color="red"
-                                name="trash"
-                                loading={deleteCommentInfo.loading}
-                                style={{ cursor: "pointer" }}
-                                onClick={() =>
-                                  deleteComment({
-                                    variables: {
-                                      postId: id,
-                                      commentId: comment.id,
-                                    },
-                                  })
+                              <Popup
+                                content="Delete comment"
+                                inverted
+                                trigger={
+                                  <Icon
+                                    key={comment.id}
+                                    color="red"
+                                    name="trash"
+                                    loading={deleteCommentInfo.loading}
+                                    style={{ cursor: "pointer" }}
+                                    onClick={() =>
+                                      deleteComment({
+                                        variables: {
+                                          postId: id,
+                                          commentId: comment.id,
+                                        },
+                                      })
+                                    }
+                                  />
                                 }
                               />
                             )}
