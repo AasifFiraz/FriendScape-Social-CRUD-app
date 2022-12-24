@@ -6,7 +6,7 @@ import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink } from "@ap
 import { setContext } from "@apollo/client/link/context";
 
 const httpLink = createHttpLink({
-  uri: ' https://friendscape-api.herokuapp.com/',
+  uri: 'https://friendscape-api.herokuapp.com/',
 });
 
 const authLink = setContext((_, { headers }) => {
